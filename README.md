@@ -1,6 +1,6 @@
 #                       ---- VolMax ----
 
-# A simple, straight-forward way to adjust your PC's volume 
+# A simple, easy way to adjust your PC's volume 
 Forget clicking on the tiny Windows icon they give you in your system tray 
 
 (admit it... how many times did you accidently move to the 'Running Tasks'??)
