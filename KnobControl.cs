@@ -1,26 +1,25 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Data;
 using System.Windows.Forms;
+using KnobControl;
 
-namespace KnobControl
+namespace VolumeControl
 {
 	
 	// A delegate type for hooking up ValueChanged notifications. 
-	public delegate void ValueChangedEventHandler(object Sender);
+	public delegate void ValueChangedEventHandler(object sender);
 	
 	/// <summary>
 	/// Summary description for KnobControl.
 	/// </summary>
-	public class KnobControl : System.Windows.Forms.UserControl
+	public class KnobControl : UserControl
 	{
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		private int _Minimum = 0;
 		private int _Maximum = 25;
@@ -151,9 +150,9 @@ namespace KnobControl
 		{
 			
 			// This call is required by the Windows.Forms Form Designer.
-			DottedPen = new Pen(Utility.getDarkColor(this.BackColor,40));
-			DottedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-			DottedPen.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
+			DottedPen = new Pen(Utility.getDarkColor(BackColor,40));
+			DottedPen.DashStyle = DashStyle.Dash;
+			DottedPen.DashCap = DashCap.Flat;
 			
 			InitializeComponent();
 			setDimensions();
@@ -166,41 +165,41 @@ namespace KnobControl
 		{
 			Graphics g = e.Graphics;
 			// Set background color of Image...            
-			gOffScreen.Clear(this.BackColor);
+			gOffScreen.Clear(BackColor);
 			// Fill knob Background to give knob effect....
 			gOffScreen.FillEllipse(bKnob,rKnob);
 			// Set antialias effect on                     
-			gOffScreen.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias ;
+			gOffScreen.SmoothingMode = SmoothingMode.AntiAlias ;
 			// Draw border of knob                         
-			gOffScreen.DrawEllipse(new Pen(this.BackColor),rKnob);
+			gOffScreen.DrawEllipse(new Pen(BackColor),rKnob);
 
 			//if control is focused 
-			if (this._isFocused)
+			if (_isFocused)
 			{
 				gOffScreen.DrawEllipse(DottedPen,rKnob);
 			}
 
 			// get current position of pointer             
-			Point Arrow = this.getKnobPosition();
+			Point Arrow = getKnobPosition();
 
 			// Draw pointer arrow that shows knob position 
-			Utility.DrawInsetCircle(ref gOffScreen,new Rectangle(Arrow.X-3 ,Arrow.Y-3,6,6),new Pen(this.BackColor));
+			Utility.DrawInsetCircle(ref gOffScreen,new Rectangle(Arrow.X-3 ,Arrow.Y-3,6,6),new Pen(BackColor));
 			
 			//---------------------------------------------
 			// darw small and large scale                  
 			//---------------------------------------------
-			if(this._ShowSmallScale)
+			if(_ShowSmallScale)
 			{
-					for (int i= Minimum ; i<=Maximum ;i+= this._SmallChange)
+					for (int i= Minimum ; i<=Maximum ;i+= _SmallChange)
 					{
-						gOffScreen.DrawLine(new Pen(this.ForeColor),getMarkerPoint(0,i),getMarkerPoint(3,i));
+						gOffScreen.DrawLine(new Pen(ForeColor),getMarkerPoint(0,i),getMarkerPoint(3,i));
 					}
 			}
-			if(this._ShowLargeScale)
+			if(_ShowLargeScale)
 			{
-				for (int i= Minimum ; i<=Maximum ;i+= this._LargeChange)
+				for (int i= Minimum ; i<=Maximum ;i+= _LargeChange)
 				{
-					gOffScreen.DrawLine(new Pen(this.ForeColor),getMarkerPoint(0,i),getMarkerPoint(5,i));
+					gOffScreen.DrawLine(new Pen(ForeColor),getMarkerPoint(0,i),getMarkerPoint(5,i));
 				}
 			}
 			
@@ -217,7 +216,7 @@ namespace KnobControl
 			if (Utility.isPointinRectangle(new Point(e.X,e.Y),rKnob))
 			{
 				// Start Rotation of knob         
-				this.isKnobRotating = true;
+				isKnobRotating = true;
 			}
 		
 		}
@@ -244,13 +243,13 @@ namespace KnobControl
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
 			// Stop rotation                   
-			this.isKnobRotating = false;
+			isKnobRotating = false;
 			if (Utility.isPointinRectangle(new Point(e.X,e.Y),rKnob))
 			{
 				// get value                   
-				this.Value = this.getValueFromPosition(new Point(e.X,e.Y));
+				Value = getValueFromPosition(new Point(e.X,e.Y));
 			}
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
@@ -258,11 +257,11 @@ namespace KnobControl
 			//--------------------------------------
 			//  Following Handles Knob Rotating     
 			//--------------------------------------
-			if (this.isKnobRotating == true)
+			if (isKnobRotating == true)
 			{
-				this.Cursor = Cursors.Hand;
+				Cursor = Cursors.Hand;
 				Point p = new Point(e.X, e.Y);
-				int posVal = this.getValueFromPosition(p);
+				int posVal = getValueFromPosition(p);
 				Value = posVal;
 			}
 		
@@ -270,15 +269,15 @@ namespace KnobControl
 
 		protected override void OnEnter(EventArgs e)
 		{
-			this._isFocused = true;
-			this.Refresh();
+			_isFocused = true;
+			Refresh();
 			base.OnEnter(new EventArgs());
 		}
 
 		protected override void OnLeave(EventArgs e)
 		{
-			this._isFocused = false;
-			this.Refresh();
+			_isFocused = false;
+			Refresh();
 			base.OnLeave(new EventArgs());
 		}
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -290,12 +289,12 @@ namespace KnobControl
 			if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Right)
 			{
 				if (_Value < Maximum) Value = _Value +1;
-				this.Refresh();
+				Refresh();
 			}
 			else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.Left)
 			{
 				if (_Value > Minimum) Value = _Value - 1;
-				this.Refresh();
+				Refresh();
 			}
 		}
 
@@ -334,31 +333,31 @@ namespace KnobControl
 		private void setDimensions()
 		{
 			// get smaller from height and width
-			int size = this.Width ;
-			if (this.Width > this.Height)
+			int size = Width ;
+			if (Width > Height)
 			{
-				size = this.Height;
+				size = Height;
 			}
 			// allow 10% gap on all side to determine size of knob    
-			this.rKnob = new Rectangle((int)(size*0.10),(int)(size*0.10),(int)(size*0.80),(int)(size*0.80));
+			rKnob = new Rectangle((int)(size*0.10),(int)(size*0.10),(int)(size*0.80),(int)(size*0.80));
 			
-			this.rScale = new Rectangle(2,2,size-4,size-4);
+			rScale = new Rectangle(2,2,size-4,size-4);
 
-			this.pKnob = new Point(rKnob.X + rKnob.Width/2, rKnob.Y + rKnob.Height/2);
+			pKnob = new Point(rKnob.X + rKnob.Width/2, rKnob.Y + rKnob.Height/2);
 			// create offscreen image                                 
-			this.OffScreenImage = new Bitmap(this.Width,this.Height);
+			OffScreenImage = new Bitmap(Width,Height);
 			// create offscreen graphics                              
-			this.gOffScreen = Graphics.FromImage(OffScreenImage);	
+			gOffScreen = Graphics.FromImage(OffScreenImage);	
 
 			// create LinearGradientBrush for creating knob            
-			bKnob = new System.Drawing.Drawing2D.LinearGradientBrush(
-				rKnob,Utility.getLightColor(this.BackColor,55),Utility.getDarkColor(this.BackColor,55),LinearGradientMode.ForwardDiagonal);
+			bKnob = new LinearGradientBrush(
+				rKnob,Utility.getLightColor(BackColor,55),Utility.getDarkColor(BackColor,55),LinearGradientMode.ForwardDiagonal);
 			// create LinearGradientBrush for knobPoint                
-			bKnobPoint = new System.Drawing.Drawing2D.LinearGradientBrush(
-				rKnob,Utility.getLightColor(this.BackColor,55),Utility.getDarkColor(this.BackColor,55),LinearGradientMode.ForwardDiagonal);
+			bKnobPoint = new LinearGradientBrush(
+				rKnob,Utility.getLightColor(BackColor,55),Utility.getDarkColor(BackColor,55),LinearGradientMode.ForwardDiagonal);
 		}
 
-		private void KnobControl_Resize(object sender, System.EventArgs e)
+		private void KnobControl_Resize(object sender, EventArgs e)
 		{
 			setDimensions();
 			Refresh();
@@ -370,7 +369,7 @@ namespace KnobControl
 		/// <returns>Point that describes current knob position</returns>
 		private Point getKnobPosition()
 		{
-			double degree = 270* this.Value/(this.Maximum-this.Minimum);
+			double degree = 270* Value/(Maximum-Minimum);
 			degree = (degree +135)*Math.PI /180;
 
 			Point Pos = new Point(0,0);
@@ -387,7 +386,7 @@ namespace KnobControl
 		/// <returns>Point that describes marker position</returns>
 		private Point getMarkerPoint(int length,int Value)
 		{
-			double degree = 270* Value/(this.Maximum-this.Minimum);
+			double degree = 270* Value/(Maximum-Minimum);
 			degree = (degree +135)*Math.PI /180;
 
 			Point Pos = new Point(0,0);
@@ -410,7 +409,7 @@ namespace KnobControl
 				degree  = (double)(pKnob.Y - p.Y ) /  (double)(pKnob.X - p.X );
 				degree = Math.Atan(degree);
 				degree = (degree) *(180/Math.PI) + 45;
-				v = (int)(degree * (this.Maximum-this.Minimum)/ 270);
+				v = (int)(degree * (Maximum-Minimum)/ 270);
 				
 			}
 			else if (p.X > pKnob.X )
@@ -418,7 +417,7 @@ namespace KnobControl
 				degree  = (double)(p.Y - pKnob.Y ) /  (double)(p.X - pKnob.X );
 				degree = Math.Atan(degree);
 				degree = 225 + (degree) *(180/Math.PI);
-				v = (int)(degree * (this.Maximum-this.Minimum)/ 270);
+				v = (int)(degree * (Maximum-Minimum)/ 270);
 				
 			}
 			if (v > Maximum) v=Maximum;
