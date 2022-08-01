@@ -7,7 +7,7 @@
     <ProjectGuid>{04123F59-331D-4582-BE0D-721FEAB6050F}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
+    <ApplicationIcon>volume.ico</ApplicationIcon>
     <AssemblyKeyContainerName />
     <AssemblyName>KnobControl</AssemblyName>
     <AssemblyOriginatorKeyFile />
@@ -136,6 +136,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="App.ico" />
+    <Content Include="Images\sound-off-icon-40944-Windows.ico" />
+    <Content Include="Images\volume-icon-vector-1.jpg" />
+    <Content Include="Images\volume.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="volume.ico" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,6 +166,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent />

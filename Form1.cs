@@ -58,13 +58,14 @@ namespace VolumeControl
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this._button1 = new System.Windows.Forms.Button();
             this._button2 = new System.Windows.Forms.Button();
             this._tb1 = new System.Windows.Forms.TextBox();
-            this.Bknob = new KnobControl();
+            this.Bknob = new VolumeControl.KnobControl();
             this.SuspendLayout();
             // 
-            // button1
+            // _button1
             // 
             this._button1.Location = new System.Drawing.Point(12, 12);
             this._button1.Name = "_button1";
@@ -74,7 +75,7 @@ namespace VolumeControl
             this._button1.UseVisualStyleBackColor = true;
             this._button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // button2
+            // _button2
             // 
             this._button2.Location = new System.Drawing.Point(12, 41);
             this._button2.Name = "_button2";
@@ -84,8 +85,9 @@ namespace VolumeControl
             this._button2.UseVisualStyleBackColor = true;
             this._button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // tb1
+            // _tb1
             // 
+            this._tb1.BackColor = System.Drawing.SystemColors.Control;
             this._tb1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._tb1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._tb1.Location = new System.Drawing.Point(156, 25);
@@ -98,7 +100,7 @@ namespace VolumeControl
             // 
             // Bknob
             // 
-            this.Bknob.BackColor = System.Drawing.Color.White;
+            this.Bknob.BackColor = System.Drawing.SystemColors.Control;
             this.Bknob.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Bknob.ForeColor = System.Drawing.Color.Black;
             this.Bknob.ImeMode = System.Windows.Forms.ImeMode.On;
@@ -113,19 +115,23 @@ namespace VolumeControl
             this.Bknob.SmallChange = 1;
             this.Bknob.TabIndex = 2;
             this.Bknob.Value = 0;
-            this.Bknob.ValueChanged += new ValueChangedEventHandler(this.Bknob_ValueChanged);
+            this.Bknob.ValueChanged += new VolumeControl.ValueChangedEventHandler(this.Bknob_ValueChanged);
             this.Bknob.Load += new System.EventHandler(this.Bknob_Load);
             // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
-            this.ClientSize = new System.Drawing.Size(339, 89);
+            this.ClientSize = new System.Drawing.Size(335, 85);
             this.Controls.Add(this._tb1);
             this.Controls.Add(this._button2);
             this.Controls.Add(this._button1);
             this.Controls.Add(this.Bknob);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.Text = "Craver Systems VOLMAX";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
