@@ -13,11 +13,12 @@ namespace VolumeControl
     public class Form1 : Form
 	{
 		private KnobControl Bknob;
-        private Button _button1;
-        private Button _button2;
+        private Button btnVolDown;
+        private Button btnVolUp;
         private TextBox _tb1;
         private static MMDeviceEnumerator enumer = new MMDeviceEnumerator();
         private MMDevice dev = enumer.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+        private CheckBox checkBox1;
 
         /// <summary>
         /// Required designer variable.
@@ -59,43 +60,44 @@ namespace VolumeControl
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this._button1 = new System.Windows.Forms.Button();
-            this._button2 = new System.Windows.Forms.Button();
+            this.btnVolDown = new System.Windows.Forms.Button();
+            this.btnVolUp = new System.Windows.Forms.Button();
             this._tb1 = new System.Windows.Forms.TextBox();
             this.Bknob = new VolumeControl.KnobControl();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // _button1
+            // btnVolDown
             // 
-            this._button1.Location = new System.Drawing.Point(12, 12);
-            this._button1.Name = "_button1";
-            this._button1.Size = new System.Drawing.Size(106, 23);
-            this._button1.TabIndex = 4;
-            this._button1.Text = "Volume Down";
-            this._button1.UseVisualStyleBackColor = true;
-            this._button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.btnVolDown.Location = new System.Drawing.Point(12, 40);
+            this.btnVolDown.Name = "btnVolDown";
+            this.btnVolDown.Size = new System.Drawing.Size(106, 23);
+            this.btnVolDown.TabIndex = 4;
+            this.btnVolDown.Text = "Volume Down";
+            this.btnVolDown.UseVisualStyleBackColor = true;
+            this.btnVolDown.Click += new System.EventHandler(this.btnVolDown_Click);
             // 
-            // _button2
+            // btnVolUp
             // 
-            this._button2.Location = new System.Drawing.Point(12, 41);
-            this._button2.Name = "_button2";
-            this._button2.Size = new System.Drawing.Size(106, 23);
-            this._button2.TabIndex = 5;
-            this._button2.Text = "Volume Up";
-            this._button2.UseVisualStyleBackColor = true;
-            this._button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnVolUp.Location = new System.Drawing.Point(12, 11);
+            this.btnVolUp.Name = "btnVolUp";
+            this.btnVolUp.Size = new System.Drawing.Size(106, 23);
+            this.btnVolUp.TabIndex = 5;
+            this.btnVolUp.Text = "Volume Up";
+            this.btnVolUp.UseVisualStyleBackColor = true;
+            this.btnVolUp.Click += new System.EventHandler(this.btnVolUp_Click);
             // 
             // _tb1
             // 
             this._tb1.BackColor = System.Drawing.SystemColors.Control;
             this._tb1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._tb1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._tb1.Location = new System.Drawing.Point(156, 25);
+            this._tb1.Location = new System.Drawing.Point(154, 13);
             this._tb1.Name = "_tb1";
             this._tb1.Size = new System.Drawing.Size(51, 23);
             this._tb1.TabIndex = 7;
             this._tb1.Text = "0";
-            this._tb1.TextChanged += new System.EventHandler(this.tb1_TextChanged);
+            //this._tb1.TextChanged += new System.EventHandler(this.tb1_TextChanged);
             this._tb1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tb1_KeyUp);
             // 
             // Bknob
@@ -116,15 +118,26 @@ namespace VolumeControl
             this.Bknob.TabIndex = 2;
             this.Bknob.Value = 0;
             this.Bknob.ValueChanged += new VolumeControl.ValueChangedEventHandler(this.Bknob_ValueChanged);
-            this.Bknob.Load += new System.EventHandler(this.Bknob_Load);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(152, 43);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(58, 20);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "Mute";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
             this.ClientSize = new System.Drawing.Size(335, 85);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this._tb1);
-            this.Controls.Add(this._button2);
-            this.Controls.Add(this._button1);
+            this.Controls.Add(this.btnVolUp);
+            this.Controls.Add(this.btnVolDown);
             this.Controls.Add(this.Bknob);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -182,47 +195,37 @@ namespace VolumeControl
             Application.Run(new Form1());
 		}
 
-        private void ChangeLabelColor()
-        {
-	        SetVolume(CheckVolLimit(Bknob.Value));
-        }
-
 		private void Bknob_ValueChanged(object sender)
 		{
-			if (!Bknob.AllowDrop)
-			{
-				ChangeLabelColor();
-			}
-			else
-			{
-				_tb1.Text = Bknob.Value.ToString();
+            if (!Bknob.AllowDrop)
+            {
+                SetVolume(CheckVolLimit(Bknob.Value));
             }
-            Bknob.AllowDrop = false;
+            else
+            {
+                Bknob.AllowDrop = false;
+            }
 
-        }
+            _tb1.Text = Bknob.Value.ToString();
 
-        private void Bknob_Load(object sender, EventArgs e)
+		}
+
+        private void btnVolUp_Click(object sender, EventArgs e)
         {
-
+	        _playbackDevice.AudioEndpointVolume.VolumeStepUp();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnVolDown_Click(object sender, EventArgs e)
         {
-	        Bknob.Value = CheckVolLimit(++Bknob.Value);
-            SetVolume(Bknob.Value);
-        }
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-	        Bknob.Value = CheckVolLimit(--Bknob.Value);
-            SetVolume(Bknob.Value);
+	        _playbackDevice.AudioEndpointVolume.VolumeStepDown();
         }
 
-        public void SystemVolumeConfigurator()
+        private void SystemVolumeConfigurator()
         {
 	        _playbackDevice = _deviceEnumerator.GetDefaultAudioEndpoint((DataFlow)EDataFlow.Render, (Role)ERole.Multimedia);
         }
 
-        public int GetVolume()
+        private int GetVolume()
         {
 	        return (int)(_playbackDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100);
         }
@@ -235,9 +238,9 @@ namespace VolumeControl
 		            ? 100
 		            : volumeLevel;
         }
+
         private void SetVolume(int volumeLevel)
         {
-	        volumeLevel = CheckVolLimit(volumeLevel);
 	        _playbackDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volumeLevel / 100.0f;
 	        _tb1.Text = volumeLevel.ToString();
         }
@@ -250,28 +253,32 @@ namespace VolumeControl
 	        int v = (e.Delta / 120) * (100 - 0) / 5;
 	        if (v > 0)
 	        {
-		        button2_Click(null, null);
+		        btnVolUp_Click(null, null);
 	        }
 	        else
 	        {
-		        button1_Click_1(null, null);
+		        btnVolDown_Click(null, null);
 	        }
 
-	        // Avoid to send MouseWheel event to the parent container
+	        // Avoid sending the MouseWheel event to the parent container
 	        ((HandledMouseEventArgs)e).Handled = true;
-        }
-
-        private void tb1_TextChanged(object sender, EventArgs e)
-        {
-	        
         }
 
         private void tb1_KeyUp(object sender, KeyEventArgs e)
         {
+            // If enter is pressed on the text box
 	        if (e.KeyData == Keys.Enter)
 	        {
-		        SetVolume(CheckVolLimit(Convert.ToInt32(_tb1.Text)));
+		        if (int.TryParse(this._tb1.Text, out var value))
+		        {
+			        SetVolume(CheckVolLimit(value));
+		        }
 	        }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+	        _playbackDevice.AudioEndpointVolume.Mute = this.checkBox1.Checked;
         }
 	}
 }
