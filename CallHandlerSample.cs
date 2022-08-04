@@ -15,20 +15,20 @@ namespace ozeki.pbx.voip.client
         /// <summary>
         /// OpsClient will connect to the PBX, and handle communication
         /// </summary>
-        private OpsClient opsClient;
+        private OpsClient _opsClient;
 
         /// <summary>
         /// IAPIExtension will forwarding the events and calls
         /// </summary>
-        private IAPIExtension apiExtension;
+        private IAPIExtension _apiExtension;
 
         /// <summary>
         /// This call object will be used during make and recieve call
         /// </summary>
-        private ICall call;
+        private ICall _call;
 
-        private readonly Microphone mic;
-        private readonly Speaker speaker;
+        private readonly Microphone _mic;
+        private readonly Speaker _speaker;
 
         /// <summary>
         /// Event triggered when the connected API Extension has called
@@ -47,8 +47,8 @@ namespace ozeki.pbx.voip.client
             if (!TryCreateConnectToClient(serverAddress, username, password)) return;
             if (!TrySetApiExtension(apiExtensionId)) return;
 
-            mic = Microphone.GetDefaultDevice();
-            speaker = Speaker.GetDefaultDevice();
+            _mic = Microphone.GetDefaultDevice();
+            _speaker = Speaker.GetDefaultDevice();
         }
 
         /// <summary>
@@ -60,10 +60,10 @@ namespace ozeki.pbx.voip.client
         /// <returns>Can or cannot connect to the PBX</returns>
         private bool TryCreateConnectToClient(string serverAddress, string username, string password)
         {
-            opsClient = new OpsClient();
-            opsClient.ErrorOccurred += ClientOnErrorOccurred;
+            _opsClient = new OpsClient();
+            _opsClient.ErrorOccurred += ClientOnErrorOccurred;
 
-            var result = opsClient.Login(serverAddress, username, password);
+            var result = _opsClient.Login(serverAddress, username, password);
             if (!result)
             {
                 Console.WriteLine("Cannot connect to the server, please check the login details and the availability of your PBX! Press Enter to continue!");
@@ -81,21 +81,21 @@ namespace ozeki.pbx.voip.client
         /// <returns>Can or cannot connect to the API Extension</returns>
         private bool TrySetApiExtension(string apiExtensionId)
         {
-            if (opsClient == null)
+            if (_opsClient == null)
                 return false;
 
-            apiExtension = string.IsNullOrWhiteSpace(apiExtensionId)
-                               ? opsClient.GetAPIExtension()
-                               : opsClient.GetAPIExtension(apiExtensionId);
+            _apiExtension = string.IsNullOrWhiteSpace(apiExtensionId)
+                               ? _opsClient.GetAPIExtension()
+                               : _opsClient.GetAPIExtension(apiExtensionId);
 
-            if (apiExtension == null)
+            if (_apiExtension == null)
             {
                 Console.WriteLine("Cannot find API Extension. Press Enter to continue!");
                 Console.ReadLine();
                 return false;
             }
 
-            SubscribeAPIExtensionEvents();
+            SubscribeApiExtensionEvents();
             return true;
         }
 
@@ -115,23 +115,23 @@ namespace ozeki.pbx.voip.client
         /// <param name="dialedNumber">The (telephone)number of the recipient device</param>
         private void CreateCall(string dialedNumber)
         {
-            if (apiExtension == null)
+            if (_apiExtension == null)
                 return;
 
-            if (call != null)
+            if (_call != null)
             {
                 Console.WriteLine("A call already in progress. Cannot handle another call until that.");
                 return;
             }
 
-            call = apiExtension.CreateCall(dialedNumber);
+            _call = _apiExtension.CreateCall(dialedNumber);
             SubscribeCallEvents();
 
-            Console.WriteLine("Outgoing call (" + call.OtherParty + ") started.");
-            call.Start();
+            Console.WriteLine("Outgoing call (" + _call.OtherParty + ") started.");
+            _call.Start();
         }
 
-        
+
         #endregion
 
         #region Incoming Calls
@@ -140,18 +140,18 @@ namespace ozeki.pbx.voip.client
         ///// </summary>
         private void apiExtension_IncomingCall(object sender, VoIPEventArgs<ICall> e)
         {
-            if (call != null)
+            if (_call != null)
             {
                 e.Item.Reject();
                 Console.WriteLine("A call already in progress. Cannot handle another call until that.");
                 return;
             }
 
-            call = e.Item;
+            _call = e.Item;
 
-            if (call.CallState == CallState.Ringing)
+            if (_call.CallState == CallState.Ringing)
             {
-                Console.WriteLine("Incoming call (" + call.OtherParty + ") accepted.");
+                Console.WriteLine("Incoming call (" + _call.OtherParty + ") accepted.");
                 SubscribeCallEvents();
                 OnIncomingCallReceived(e.Item);
             }
@@ -161,19 +161,19 @@ namespace ozeki.pbx.voip.client
         #region Call events
         private void SubscribeCallEvents()
         {
-            if (call != null)
+            if (_call != null)
             {
-                call.CallStateChanged += call_CallStateChanged;
-                call.CallErrorOccurred += call_CallErrorOccurred;
+                _call.CallStateChanged += call_CallStateChanged;
+                _call.CallErrorOccurred += call_CallErrorOccurred;
             }
         }
 
         private void UnsubscribeCallEvents()
         {
-            if (call != null)
+            if (_call != null)
             {
-                call.CallStateChanged -= call_CallStateChanged;
-                call.CallErrorOccurred -= call_CallErrorOccurred;
+                _call.CallStateChanged -= call_CallStateChanged;
+                _call.CallErrorOccurred -= call_CallErrorOccurred;
             }
         }
 
@@ -181,16 +181,16 @@ namespace ozeki.pbx.voip.client
         {
             if (e.Item.IsInCall())
             {
-                Console.WriteLine("In call with " + call.OtherParty + ".");
+                Console.WriteLine("In call with " + _call.OtherParty + ".");
                 ConnectDevicesToCall();
             }
             else if (e.Item.IsCallEnded())
             {
                 UnsubscribeCallEvents();
                 DisconnectDevicesFromCall();
-                Console.WriteLine("Outgoing call (" + call.OtherParty + ") ended.");
+                Console.WriteLine("Outgoing call (" + _call.OtherParty + ") ended.");
 
-                call = null;
+                _call = null;
             }
         }
 
@@ -201,7 +201,7 @@ namespace ozeki.pbx.voip.client
 
             UnsubscribeCallEvents();
             DisconnectDevicesFromCall();
-            call = null;
+            _call = null;
         }
 
         private void OnIncomingCallReceived(ICall item)
@@ -220,8 +220,8 @@ namespace ozeki.pbx.voip.client
         /// <param name="e">Information about the error</param>
         private void ClientOnErrorOccurred(object sender, ErrorInfo e)
         {
-            Console.WriteLine(e.Message +" Press Enter to exit!");
-            UnsubscribeAPIExtensionEvents();
+            Console.WriteLine(e.Message + " Press Enter to exit!");
+            UnsubscribeApiExtensionEvents();
             Console.ReadLine();
             Environment.Exit(0);
         }
@@ -231,14 +231,14 @@ namespace ozeki.pbx.voip.client
         /// </summary>
         private void ConnectDevicesToCall()
         {
-            if (call == null)
+            if (_call == null)
                 return;
 
-            call.ConnectAudioSender(mic);
-            call.ConnectAudioReceiver(speaker);
+            _call.ConnectAudioSender(_mic);
+            _call.ConnectAudioReceiver(_speaker);
 
-            mic.Start();
-            speaker.Start();
+            _mic.Start();
+            _speaker.Start();
         }
 
         /// <summary>
@@ -246,37 +246,37 @@ namespace ozeki.pbx.voip.client
         /// </summary>
         private void DisconnectDevicesFromCall()
         {
-            if (call == null)
+            if (_call == null)
                 return;
 
-            call.DisconnectAudioSender(mic);
-            call.DisconnectAudioReceiver(speaker);
+            _call.DisconnectAudioSender(_mic);
+            _call.DisconnectAudioReceiver(_speaker);
         }
 
-        private void SubscribeAPIExtensionEvents()
+        private void SubscribeApiExtensionEvents()
         {
-            if (apiExtension != null)
-                apiExtension.IncomingCall += apiExtension_IncomingCall;
+            if (_apiExtension != null)
+                _apiExtension.IncomingCall += apiExtension_IncomingCall;
         }
 
-        private void UnsubscribeAPIExtensionEvents()
+        private void UnsubscribeApiExtensionEvents()
         {
-            if (apiExtension != null)
-                apiExtension.IncomingCall -= apiExtension_IncomingCall;
+            if (_apiExtension != null)
+                _apiExtension.IncomingCall -= apiExtension_IncomingCall;
         }
 
         ~CallHandlerSample()
         {
-            UnsubscribeAPIExtensionEvents();
+            UnsubscribeApiExtensionEvents();
             UnsubscribeCallEvents();
 
-            if (mic != null)
-                mic.Dispose();
+            if (_mic != null)
+                _mic.Dispose();
 
-            if (speaker != null)
-                speaker.Dispose();
+            if (_speaker != null)
+                _speaker.Dispose();
 
-            call = null;
+            _call = null;
         }
     }
 }
