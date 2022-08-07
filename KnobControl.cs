@@ -39,16 +39,20 @@ namespace VolumeControl
 
         Brush _bKnob;
         Brush _bKnobPoint;
+
         //-------------------------------------------------------
         // declare Off screen image and Offscreen graphics       
         //-------------------------------------------------------
         private Image _offScreenImage;
         private Graphics _gOffScreen;
+
+
         //-------------------------------------------------------
         // An event that clients can use to be notified whenever 
         // the Value is Changed.                                 
         //-------------------------------------------------------
         public event ValueChangedEventHandler ValueChanged;
+
         //-------------------------------------------------------
         // Invoke the ValueChanged event; called  when value     
         // is changed                                            
@@ -90,11 +94,13 @@ namespace VolumeControl
         /// <summary>
         /// Minimum Value for knob Control
         /// </summary>
+        /// 
         public int Minimum
         {
             get { return _minimum; }
             set { _minimum = value; }
         }
+
         /// <summary>
         /// Maximum value for knob control
         /// </summary>
@@ -116,6 +122,7 @@ namespace VolumeControl
                 Refresh();
             }
         }
+
         /// <summary>
         /// value set for small change.
         /// </summary>
@@ -161,6 +168,7 @@ namespace VolumeControl
             // TODO: Add any initialization after the InitForm call
 
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -211,6 +219,7 @@ namespace VolumeControl
         {
             // Empty To avoid Flickring due do background Drawing.
         }
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             if (Utility.IsPointinRectangle(new Point(e.X, e.Y), _rKnob))
@@ -221,28 +230,22 @@ namespace VolumeControl
 
         }
 
-        //----------------------------------------------------------
-        // we need to override IsInputKey method to allow user to   
-        // use up, down, right and bottom keys other wise using this
-        // keys will change focus from current object to another    
-        // object on the form                                       
-        //----------------------------------------------------------
         protected override bool IsInputKey(Keys key)
         {
-            switch (key)
-            {
-                case Keys.Up:
-                case Keys.Down:
-                case Keys.Right:
-                case Keys.Left:
-                    return true;
-            }
+            //switch (key)
+            //{
+            //    case Keys.Up:
+            //    case Keys.Down:
+            //    case Keys.Right:
+            //    case Keys.Left:
+            //        return true;
+            //}
             return base.IsInputKey(key);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            // Stop rotation                   
+            //// Stop rotation                   
             _isKnobRotating = false;
             if (Utility.IsPointinRectangle(new Point(e.X, e.Y), _rKnob))
             {
@@ -280,27 +283,25 @@ namespace VolumeControl
             Refresh();
             base.OnLeave(new EventArgs());
         }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
 
             //--------------------------------------------------------
             // Handles knob rotation with up,down,left and right keys 
             //--------------------------------------------------------
-            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Right)
-            {
-                if (_value < Maximum) Value = _value + 1;
-                Refresh();
-            }
-            else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.Left)
-            {
-                if (_value > Minimum) Value = _value - 1;
-                Refresh();
-            }
+            //if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Right)
+            //{
+            //    if (_value < Maximum) Value = _value + 1;
+            //    Refresh();
+            //}
+            //else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.Left)
+            //{
+            //    if (_value > Minimum) Value = _value - 1;
+            //    Refresh();
+            //}
         }
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -314,10 +315,6 @@ namespace VolumeControl
         }
 
         #region Component Designer generated code
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             // 
@@ -422,11 +419,10 @@ namespace VolumeControl
             }
             if (v > Maximum) v = Maximum;
             if (v < Minimum) v = Minimum;
+
             return v;
 
         }
-
-
-
+        
     }
 }
