@@ -14,7 +14,7 @@ namespace VolumeControl
     /// <summary>
     /// Summary description for KnobControl.
     /// </summary>
-    public class KnobControl : UserControl
+    public class VolMax : UserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -153,7 +153,7 @@ namespace VolumeControl
             }
         }
 
-        public KnobControl()
+        public VolMax()
         {
 
             // This call is required by the Windows.Forms Form Designer.
