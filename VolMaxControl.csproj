@@ -111,11 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD:VolMaxControl.csproj
     <Compile Include="VolMaxFrm.cs">
-=======
-    <Compile Include="Form1.cs">
->>>>>>> fb07701b24fc8a992cb5f5bc59e4816fb7638656:KnobControl.csproj
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="VolMax.cs">
@@ -124,7 +120,6 @@
     <Compile Include="Utility.cs">
       <SubType>Code</SubType>
     </Compile>
-<<<<<<< HEAD:VolMaxControl.csproj
     <Content Include="Images\volume %281%29.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -136,19 +131,6 @@
     </Content>
     <EmbeddedResource Include="VolMaxFrm.resx">
       <DependentUpon>VolMaxFrm.cs</DependentUpon>
-=======
-    <Content Include="App.ico" />
-    <Content Include="Images\sound-off-icon-40944-Windows.ico" />
-    <Content Include="Images\volume %281%29.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\volume-icon-vector-1.jpg" />
-    <Content Include="Images\volume.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
->>>>>>> fb07701b24fc8a992cb5f5bc59e4816fb7638656:KnobControl.csproj
     </EmbeddedResource>
     <EmbeddedResource Include="VolMax.resx">
       <DependentUpon>VolMax.cs</DependentUpon>
@@ -156,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="KnobControl_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
